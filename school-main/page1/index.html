@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신경망 실험실 — 뉴런과 퍼셉트론</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="lab-header">
+    <div class="header-inner">
+      <h1>🧠 신경망 실험실</h1>
+      <p class="subtitle">뉴런 · 퍼셉트론 · 다층 신경망을 직접 탐험하세요</p>
+      <nav class="section-nav" id="sectionNav">
+        <button class="nav-btn active" data-section="bio">① 생물학적 뉴런</button>
+        <button class="nav-btn" data-section="perceptron">② 퍼셉트론</button>
+        <button class="nav-btn" data-section="logic">③ AND · OR · XOR</button>
+        <button class="nav-btn" data-section="mlp">④ 다층 퍼셉트론</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Section 1: Biological Neuron -->
+    <section id="section-bio" class="lab-section active">
+      <div class="section-grid">
+        <div class="panel info-panel">
+          <h2>인간의 신경망과 뉴런</h2>
+          <p>인간의 두뇌는 <strong>뉴런</strong>이 <strong>시냅스</strong>를 통해 병렬적으로 연결됩니다.</p>
+          <ul class="concept-list">
+            <li>각 뉴런은 여러 입력 신호의 <em>합</em>을 받습니다</li>
+            <li>합이 <strong>역치(threshold)</strong>보다 크면 <strong>발화(fire)</strong>하여 다음 뉴런에 신호를 전달합니다</li>
+            <li>시냅스를 따라 전달된 신호가 다음 뉴런의 역치를 넘으면 연쇄 반응이 일어납니다</li>
+          </ul>
+          <div class="controls">
+            <label>입력 자극 강도
+              <input type="range" id="bioStimulus" min="0" max="100" value="60">
+              <span id="bioStimulusVal">60</span>
+            </label>
+            <button id="bioFireBtn" class="btn primary">자극 전송 ▶</button>
+            <button id="bioResetBtn" class="btn">초기화</button>
+          </div>
+          <div class="legend-box">
+            <span class="dot idle"></span> 대기
+            <span class="dot receiving"></span> 신호 수신
+            <span class="dot fired"></span> 발화 (역치 초과)
+          </div>
+        </div>
+        <div class="panel canvas-panel">
+          <canvas id="bioCanvas" width="700" height="420"></canvas>
+          <p class="canvas-caption">시냅스를 따라 이동하는 자극 — 역치를 넘으면 뉴런이 점등됩니다</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Perceptron -->
+    <section id="section-perceptron" class="lab-section">
+      <div class="section-grid">
+        <div class="panel info-panel">
+          <h2>퍼셉트론 — 인공 뉴런</h2>
+          <p>퍼셉트론은 인공신경망의 기본 단위로, 생물학적 뉴런을 수학적으로 모델링합니다.</p>
+          <div class="formula-box" id="perceptronFormula">
+            p(x, y) = <span id="fA">1.0</span>x + <span id="fB">1.0</span>y + <span id="fW">−1.5</span>
+          </div>
+          <div class="formula-box highlight" id="activationFormula">
+            활성화: p(x, y) <span id="thresholdSign">&gt;</span> 0 → <span id="activationResult">T / F</span>
+          </div>
+          <div class="controls">
+            <label>가중치 a (x)
+              <input type="range" id="weightA" min="-3" max="3" step="0.1" value="1">
+              <span id="weightAVal">1.0</span>
+            </label>
+            <label>가중치 b (y)
+              <input type="range" id="weightB" min="-3" max="3" step="0.1" value="1">
+              <span id="weightBVal">1.0</span>
+            </label>
+            <label>편향 w
+              <input type="range" id="weightW" min="-3" max="3" step="0.1" value="-1.5">
+              <span id="weightWVal">−1.5</span>
+            </label>
+          </div>
+          <div class="legend-box">
+            <span class="dot pos"></span> p &gt; 0 (활성)
+            <span class="dot neg"></span> p ≤ 0 (비활성)
+            <span class="line-sample"></span> 결정 경계 (점멸)
+          </div>
+        </div>
+        <div class="panel canvas-panel">
+          <canvas id="perceptronCanvas" width="700" height="420"></canvas>
+          <p class="canvas-caption">점을 클릭하여 입력을 추가 · 슬라이더로 결정 경계(직선)를 조절하세요</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Logic Gates -->
+    <section id="section-logic" class="lab-section">
+      <div class="section-grid">
+        <div class="panel info-panel">
+          <h2>단층 퍼셉트론의 한계</h2>
+          <p>하나의 직선(결정 경계)으로 입력을 분류할 수 있는지 확인합니다.</p>
+          <div class="gate-tabs">
+            <button class="gate-btn active" data-gate="AND">AND</button>
+            <button class="gate-btn" data-gate="OR">OR</button>
+            <button class="gate-btn" data-gate="XOR">XOR</button>
+          </div>
+          <div id="gateDescription" class="gate-desc">
+            <p><strong>AND:</strong> 두 입력이 모두 1일 때만 출력 1 — <em>선형 분리 가능 ✓</em></p>
+          </div>
+          <table class="truth-table" id="truthTable">
+            <thead><tr><th>x₁</th><th>x₂</th><th>출력</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="controls" id="logicControls">
+            <label>가중치 a (x₁)
+              <input type="range" id="logicSlope" min="-2" max="2" step="0.05" value="1">
+            </label>
+            <label>편향 w
+              <input type="range" id="logicOffset" min="-2" max="2" step="0.05" value="-1.5">
+            </label>
+          </div>
+          <p id="logicResult" class="result-msg success">✓ 단일 직선으로 완벽 분류 가능!</p>
+        </div>
+        <div class="panel canvas-panel">
+          <canvas id="logicCanvas" width="700" height="420"></canvas>
+          <p class="canvas-caption" id="logicCaption">AND: 하나의 직선으로 0/1을 분리할 수 있습니다</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: MLP -->
+    <section id="section-mlp" class="lab-section">
+      <div class="section-grid wide">
+        <div class="panel info-panel">
+          <h2>다층 퍼셉트론 (MLP)</h2>
+          <p>XOR 문제는 단층 퍼셉트론으로 해결할 수 없지만, <strong>은닉층</strong>을 추가하면 해결됩니다.</p>
+          <div class="mlp-architecture">
+            <div class="arch-layer">
+              <span class="layer-label">입력</span>
+              <span class="node">x₁</span>
+              <span class="node">x₂</span>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-layer hidden">
+              <span class="layer-label">은닉층</span>
+              <span class="node nand">NAND</span>
+              <span class="node or">OR</span>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-layer">
+              <span class="layer-label">출력</span>
+              <span class="node and">AND</span>
+            </div>
+          </div>
+          <p class="mlp-formula">출력 = AND( OR(x₁,x₂), NAND(x₁,x₂) ) = XOR(x₁, x₂)</p>
+          <div class="controls">
+            <label>입력 x₁
+              <input type="range" id="mlpX1" min="0" max="1" step="1" value="0">
+              <span id="mlpX1Val">0</span>
+            </label>
+            <label>입력 x₂
+              <input type="range" id="mlpX2" min="0" max="1" step="1" value="0">
+              <span id="mlpX2Val">0</span>
+            </label>
+            <button id="mlpAnimateBtn" class="btn primary">신호 전파 애니메이션 ▶</button>
+          </div>
+          <table class="truth-table" id="mlpTruthTable">
+            <thead><tr><th>x₁</th><th>x₂</th><th>OR</th><th>NAND</th><th>XOR</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="compare-panels">
+          <div class="panel canvas-panel half">
+            <h3>단층 퍼셉트론 — XOR 불가</h3>
+            <canvas id="mlpSingleCanvas" width="400" height="320"></canvas>
+            <p class="canvas-caption">하나의 직선으로는 XOR 분류 불가</p>
+          </div>
+          <div class="panel canvas-panel half">
+            <h3>다층 퍼셉트론 — XOR 해결</h3>
+            <canvas id="mlpMultiCanvas" width="400" height="320"></canvas>
+            <p class="canvas-caption">두 개의 경계로 XOR 영역 분리</p>
+          </div>
+          <div class="panel canvas-panel half">
+            <h3>신경망 구조와 신호 흐름</h3>
+            <canvas id="mlpNetworkCanvas" width="400" height="320"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lab-footer">
+    <p>신경망 실험실 — 교육용 인터랙티브 시뮬레이션</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Neural Vision Lab</title>
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="container">
+		<header>
+			<h1>Neural Vision Lab</h1>
+		</header>
+
+		<nav class="tab-menu">
+			<button class="tab-btn active" onclick="switchTab('ann')">ANN</button>
+			<button class="tab-btn" onclick="switchTab('dnn')">DNN</button>
+			<button class="tab-btn" onclick="switchTab('rnn')">RNN</button>
+		</nav>
+
+		<section id="ann-section" class="content-section active">
+			<div class="canvas-container">
+				<canvas id="annCanvas" width="720" height="420"></canvas>
+			</div>
+			<aside class="control-panel">
+				<div class="concept-desc">
+					<h3>ANN (인공신경망)</h3>
+					<p>순전파 및 역전파 시각화</p>
+				</div>
+				<div class="btn-group">
+					<button id="forward-btn" class="action-btn" onclick="startAnnForward()">Forward</button>
+					<button id="backprop-btn" class="action-btn secondary-btn" onclick="startAnnBackward()" style="display:none;">Backprop</button>
+				</div>
+			</aside>
+		</section>
+
+		<section id="dnn-section" class="content-section">
+			<div class="canvas-container">
+				<canvas id="dnnCanvas" width="720" height="420"></canvas>
+			</div>
+			<aside class="control-panel">
+				<div class="concept-desc">
+					<h3>DNN (심층신경망)</h3>
+					<p>특징 추출 및 잠재 공간 시각화</p>
+				</div>
+				<div class="btn-group">
+					<button id="dnn-toggle" class="action-btn" onclick="toggleDnnClassification()">Toggle Classification</button>
+				</div>
+			</aside>
+		</section>
+
+		<section id="rnn-section" class="content-section">
+			<div class="canvas-container">
+				<canvas id="rnnCanvas" width="720" height="420"></canvas>
+			</div>
+			<aside class="control-panel">
+				<div class="concept-desc">
+					<h3>RNN (순환신경망)</h3>
+					<p>언롤링과 기억 소실 시각화</p>
+				</div>
+				<div class="btn-group">
+					<button id="rnn-toggle" class="action-btn" onclick="toggleRnnUnroll()">Toggle Unroll</button>
+				</div>
+			</aside>
+		</section>
+
+		<footer style="margin-top:20px;text-align:center;color:#94a3b8;font-size:13px;">
+			로컬에서 실행하려면 간단한 HTTP 서버로 열어주세요. (예: `python -m http.server`)
+		</footer>
+	</div>
+
+	<script src="js/ann.js"></script>
+	<script src="js/dnn.js"></script>
+	<script src="js/rnn.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
